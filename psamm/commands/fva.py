@@ -104,14 +104,65 @@ class FluxVariabilityCommand(MetabolicMixin, SolverCommandMixin,
                     yield reaction_id, bounds
 
             executor.join()
+        option = 2
+        if option == 0:
+            import window
+            sizex = window.get_window_size()
+            reaction_id_width = len(max(self._mm.reactions, key=len))
+            for reaction_id, (lower, upper) in iter_results():
+                rx = self._mm.get_reaction(reaction_id)
+                rxt = rx.translated_compounds(lambda x: compound_name.get(x, x))
+                #print('{}\t{}\t{}\t{}'.format(reaction_id, lower, upper, rxt))
+                rx_len = len('{}'.format(rxt))
+                z = sizex - reaction_id_width - 40
+                print('{}{}{}{}'.format(reaction_id.ljust(reaction_id_width), '{:<20}'.format(lower), '{:<20}'.format(upper), '{}'.format(rxt)[:z]))
+                for i in range(int(rx_len / z)):
+                    g = i + 1
+                    rx_string ='{}'.format(rxt)[z*g:]
+                    offset = 40 + reaction_id_width
+                    blank = ' ' * offset
+                    print(blank + rx_string[:z])
+                print('')
+            logger.info('Solving took {:.2f} seconds'.format(
+                time.time() - start_time))
 
-        for reaction_id, (lower, upper) in iter_results():
-            rx = self._mm.get_reaction(reaction_id)
-            rxt = rx.translated_compounds(lambda x: compound_name.get(x, x))
-            print('{}\t{}\t{}\t{}'.format(reaction_id, lower, upper, rxt))
+        elif option == 1:
+            reaction_id_width = len(max(self._mm.reactions, key=len))
+            for reaction_id, (lower, upper) in iter_results():
+                rx = self._mm.get_reaction(reaction_id)
+                rxt = rx.translated_compounds(lambda x: compound_name.get(x, x))
+                #print('{}\t{}\t{}\t{}'.format(reaction_id, lower, upper, rxt))
+                rx_len = len('{}'.format(rxt))
+                z = 90
+                print('{}{}{}{}'.format(reaction_id.ljust(reaction_id_width), '{:<20}'.format(lower), '{:<20}'.format(upper), '{}'.format(rxt)[:z]))
+                for i in range(int(rx_len / z)):
+                    g = i + 1
+                    rx_string ='{}'.format(rxt)[z*g:]
+                    offset = 40 + reaction_id_width
+                    blank = ' ' * offset
+                    print(blank + rx_string[:z])
+                print('')
+            logger.info('Solving took {:.2f} seconds'.format(
+                time.time() - start_time))
 
-        logger.info('Solving took {:.2f} seconds'.format(
-            time.time() - start_time))
+        elif option == 2:
+            reaction_id_width = len(max(self._mm.reactions, key=len))
+            for reaction_id, (lower, upper) in iter_results():
+                rx = self._mm.get_reaction(reaction_id)
+                rxt = rx.translated_compounds(lambda x: compound_name.get(x, x))
+                #print('{}\t{}\t{}\t{}'.format(reaction_id, lower, upper, rxt))
+                print('{}{}{}'.format(reaction_id.ljust(reaction_id_width), '{:<20}'.format(lower), '{:<20}'.format(upper)))
+            logger.info('Solving took {:.2f} seconds'.format(
+                time.time() - start_time))
+
+        elif option == 3:
+            reaction_id_width = len(max(self._mm.reactions, key=len))
+            for reaction_id, (lower, upper) in iter_results():
+                rx = self._mm.get_reaction(reaction_id)
+                rxt = rx.translated_compounds(lambda x: compound_name.get(x, x))
+                print('{}\t{}\t{}\t{}'.format(reaction_id, lower, upper, rxt))
+            logger.info('Solving took {:.2f} seconds'.format(
+                time.time() - start_time))
 
 
 class FVATaskHandler(object):
