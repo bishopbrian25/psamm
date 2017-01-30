@@ -104,7 +104,7 @@ class FluxVariabilityCommand(MetabolicMixin, SolverCommandMixin,
                     yield reaction_id, bounds
 
             executor.join()
-        option = 2
+        option = 3
         if option == 0:
             import window
             sizex = window.get_window_size()
